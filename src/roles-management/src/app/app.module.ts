@@ -3,9 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { DashboardModule } from './dashboard/dashboard.module';
 import { SharedModule } from './shared/shared.module';
-import { CoreModule } from './core/core.module';
+import { RootModule } from './modules/root/root.module';
 
 @NgModule({
   declarations: [
@@ -14,9 +13,8 @@ import { CoreModule } from './core/core.module';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    DashboardModule,
     SharedModule,
-    CoreModule
+    RootModule
   ],
   providers: [],
   bootstrap: [AppComponent]

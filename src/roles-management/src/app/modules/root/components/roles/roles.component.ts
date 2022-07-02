@@ -16,7 +16,7 @@ export class RolesComponent implements AfterViewInit {
   @ViewChild(MatTable) table!: MatTable<Role>;
   dataSource: RolesDataSource;
 
-  /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
+  selectedRole: Role | undefined;
   displayedColumns = ['id', 'name'];
 
   constructor() {
@@ -27,5 +27,14 @@ export class RolesComponent implements AfterViewInit {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.table.dataSource = this.dataSource;
+  }
+
+  addRole() {
+    this.dataSource.addRole(new Role("new role"));
+    this.table.renderRows();
+  }
+
+  updateRoleName(role: Role) {
+    this.dataSource.updateRoleName(role.id, role.name);
   }
 }

@@ -1,3 +1,4 @@
+import { NgModule } from '@angular/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,8 +18,10 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
-import { NgModule } from '@angular/core';
 
 @NgModule({
   imports: [
@@ -40,7 +43,10 @@ import { NgModule } from '@angular/core';
     MatTabsModule,
     MatTableModule,
     MatPaginatorModule,
-    MatSortModule
+    MatSortModule,
+    MatToolbarModule,
+    MatSelectModule,
+    MatCheckboxModule
   ],
   exports: [
     MatButtonModule,
@@ -61,7 +67,10 @@ import { NgModule } from '@angular/core';
     MatTabsModule,
     MatTableModule,
     MatPaginatorModule,
-    MatSortModule
+    MatSortModule,
+    MatToolbarModule,
+    MatSelectModule,
+    MatCheckboxModule
   ],
 })
 export class MaterialModule {}

@@ -5,57 +5,42 @@ import { map } from 'rxjs/operators';
 import { Observable, of as observableOf, merge } from 'rxjs';
 import { Group } from '../../models/group.model';
 import { Role } from '../../models/role.model';
+import { SAMPLE_GROUPS, SAMPLE_ROLES } from '../../repository/sampleData';
+import { StorageService } from 'src/app/shared/services/storage.service';
 
-
-const EXAMPLE_DATA: Group[] = mockData();
-
-function mockData(): Group[] {
-  const roles = [
-    new Role("Pizza editor"),
-    new Role("Dust sniffer"),
-    new Role("Poker cheater"),
-    new Role("Drug user")
-  ]
-
-  const admins = new Group("Admins");
-  const generalManagers = new Group("General Managers");
-  const managersTech = new Group("Managers - Tech");
-  const managersBilling = new Group("Managers - Billing");
-  const managersSales = new Group("Managers - Sales");
-  const supportTech = new Group("Support - Tech");
-  const supportBilling = new Group("Support - Billing");
-  const supportSales = new Group("Support - Sales");
-
-  roles.forEach(i => {
-    admins.addRole(i);
-    generalManagers.addRole(i);
-    managersTech.addRole(i);
-    managersBilling.addRole(i);
-    managersSales.addRole(i);
-    supportTech.addRole(i);
-    supportBilling.addRole(i);
-    supportSales.addRole(i);
-  });
-
-  return [
-    admins, generalManagers, managersTech,
-    managersBilling, managersSales, supportTech,
-    supportBilling, supportSales
-  ]
-}
 
 /**
  * Data source for the Groups view. This class should
  * encapsulate all logic for fetching and manipulating the displayed data
  * (including sorting, pagination, and filtering).
  */
-export class GroupsDataSource extends DataSource<Group> {
-  data: Group[] = EXAMPLE_DATA;
+export class GroupsDataSource extends DataSource<Role> {
+  groups: Group[];
+  roles: Role[];
   paginator: MatPaginator | undefined;
   sort: MatSort | undefined;
 
   constructor() {
     super();
+
+    const roles =  StorageService.get<Role[]>("Roles");
+    const groups = StorageService.get<Group[]>("Groups");
+
+    if (roles === null) {
+      StorageService.set<Role[]>("Roles", SAMPLE_ROLES);
+      this.roles = SAMPLE_ROLES;
+    }
+    else {
+      this.roles = roles;
+    }
+
+    if (groups === null) {
+      StorageService.set<Group[]>("Groups", SAMPLE_GROUPS);
+      this.groups = SAMPLE_GROUPS;
+    }
+    else {
+      this.groups = groups;
+    }
   }
 
   /**
@@ -63,13 +48,13 @@ export class GroupsDataSource extends DataSource<Group> {
    * the returned stream emits new items.
    * @returns A stream of the items to be rendered.
    */
-  connect(): Observable<Group[]> {
+  connect(): Observable<Role[]> {
     if (this.paginator && this.sort) {
       // Combine everything that affects the rendered data into one update
       // stream for the data-table to consume.
-      return merge(observableOf(this.data), this.paginator.page, this.sort.sortChange)
+      return merge(observableOf(this.roles), this.paginator.page, this.sort.sortChange)
         .pipe(map(() => {
-          return this.getPagedData(this.getSortedData([...this.data ]));
+          return this.getPagedData(this.getSortedData([...this.roles ]));
         }));
     } else {
       throw Error('Please set the paginator and sort on the data source before connecting.');
@@ -86,7 +71,7 @@ export class GroupsDataSource extends DataSource<Group> {
    * Paginate the data (client-side). If you're using server-side pagination,
    * this would be replaced by requesting the appropriate data from the server.
    */
-  private getPagedData(data: Group[]): Group[] {
+  private getPagedData(data: Role[]): Role[] {
     if (this.paginator) {
       const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
       return data.splice(startIndex, this.paginator.pageSize);
@@ -99,7 +84,7 @@ export class GroupsDataSource extends DataSource<Group> {
    * Sort the data (client-side). If you're using server-side sorting,
    * this would be replaced by requesting the appropriate data from the server.
    */
-  private getSortedData(data: Group[]): Group[] {
+  private getSortedData(data: Role[]): Role[] {
     if (!this.sort || !this.sort.active || this.sort.direction === '') {
       return data;
     }

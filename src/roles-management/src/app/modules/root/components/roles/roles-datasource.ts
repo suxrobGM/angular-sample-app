@@ -4,13 +4,8 @@ import { MatSort } from '@angular/material/sort';
 import { map } from 'rxjs/operators';
 import { Observable, of as observableOf, merge } from 'rxjs';
 import { Role } from '../../models/role.model';
-
-const EXAMPLE_DATA: Role[] = [
-  new Role("Pizza editor"),
-  new Role("Dust sniffer"),
-  new Role("Poker cheater"),
-  new Role("Drug user")
-];
+import { SAMPLE_ROLES } from '../../repository/sampleData';
+import { StorageService } from 'src/app/shared/services/storage.service';
 
 /**
  * Data source for the Roles view. This class should
@@ -18,12 +13,21 @@ const EXAMPLE_DATA: Role[] = [
  * (including sorting, pagination, and filtering).
  */
 export class RolesDataSource extends DataSource<Role> {
-  data: Role[] = EXAMPLE_DATA;
+  data: Role[];
   paginator: MatPaginator | undefined;
   sort: MatSort | undefined;
 
   constructor() {
     super();
+
+    const data =  StorageService.get<Role[]>("Roles");
+    if (data === null) {
+      StorageService.set<Role[]>("Roles", SAMPLE_ROLES);
+      this.data = SAMPLE_ROLES;
+    }
+    else {
+      this.data = data;
+    }
   }
 
   /**
@@ -49,6 +53,20 @@ export class RolesDataSource extends DataSource<Role> {
    * any open connections or free any held resources that were set up during connect.
    */
   disconnect(): void {}
+
+  addRole(role: Role) {
+    this.data.push(role);
+    StorageService.set<Role[]>("Roles", this.data);
+  }
+
+  updateRoleName(id: string, name: string) {
+    const role = this.data.find(i => i.id === id);
+
+    if (role) {
+      role.name = name;
+      StorageService.set<Role[]>("Roles", this.data);
+    }
+  }
 
   /**
    * Paginate the data (client-side). If you're using server-side pagination,

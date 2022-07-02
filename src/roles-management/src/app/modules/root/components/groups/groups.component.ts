@@ -13,16 +13,22 @@ import { GroupsDataSource } from './groups-datasource';
 export class GroupsComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  @ViewChild(MatTable) table!: MatTable<Group>;
+  @ViewChild(MatTable) table!: MatTable<GroupItem>;
   dataSource: GroupsDataSource;
 
-  /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns = ['required', 'name'];
   groups: GroupItem[];
+  selectedGroup: Group;
 
   constructor() {
     this.dataSource = new GroupsDataSource();
     this.groups = [];
+
+    this.dataSource.groups.forEach((item, i) => {
+      this.groups.push({active: i === 0, group: item});
+    });
+
+    this.selectedGroup = this.groups[0]?.group;
   }
 
   ngAfterViewInit(): void {
@@ -30,14 +36,17 @@ export class GroupsComponent implements AfterViewInit {
     this.dataSource.paginator = this.paginator;
     //this.table.dataSource = this.dataSource;
 
-    this.dataSource.data.forEach((item, i) => {
-      this.groups.push({active: i === 0, group: item});
-    })
+    //this.selectedGroup = this.groups[0].group;
   }
 
   clickGroup(groupItem: GroupItem) {
     this.groups.forEach(group => group.active = false);
     groupItem.active = true;
+    this.selectedGroup = groupItem.group;
+  }
+
+  addGroup() {
+    this.groups.push({active: false, group: new Group("New group")});
   }
 }
 

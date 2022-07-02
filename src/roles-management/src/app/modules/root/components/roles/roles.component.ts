@@ -2,7 +2,8 @@ import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
-import { RolesDataSource, RolesItem } from './roles-datasource';
+import { Role } from '../../models/role.model';
+import { RolesDataSource } from './roles-datasource';
 
 @Component({
   selector: 'app-roles',
@@ -12,7 +13,7 @@ import { RolesDataSource, RolesItem } from './roles-datasource';
 export class RolesComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  @ViewChild(MatTable) table!: MatTable<RolesItem>;
+  @ViewChild(MatTable) table!: MatTable<Role>;
   dataSource: RolesDataSource;
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */

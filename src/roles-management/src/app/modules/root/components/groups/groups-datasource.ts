@@ -3,44 +3,54 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { map } from 'rxjs/operators';
 import { Observable, of as observableOf, merge } from 'rxjs';
+import { Group } from '../../models/group.model';
+import { Role } from '../../models/role.model';
 
-// TODO: Replace this with your own data model type
-export interface GroupsItem {
-  name: string;
-  id: number;
+
+const EXAMPLE_DATA: Group[] = mockData();
+
+function mockData(): Group[] {
+  const roles = [
+    new Role("Pizza editor"),
+    new Role("Dust sniffer"),
+    new Role("Poker cheater"),
+    new Role("Drug user")
+  ]
+
+  const admins = new Group("Admins");
+  const generalManagers = new Group("General Managers");
+  const managersTech = new Group("Managers - Tech");
+  const managersBilling = new Group("Managers - Billing");
+  const managersSales = new Group("Managers - Sales");
+  const supportTech = new Group("Support - Tech");
+  const supportBilling = new Group("Support - Billing");
+  const supportSales = new Group("Support - Sales");
+
+  roles.forEach(i => {
+    admins.addRole(i);
+    generalManagers.addRole(i);
+    managersTech.addRole(i);
+    managersBilling.addRole(i);
+    managersSales.addRole(i);
+    supportTech.addRole(i);
+    supportBilling.addRole(i);
+    supportSales.addRole(i);
+  });
+
+  return [
+    admins, generalManagers, managersTech,
+    managersBilling, managersSales, supportTech,
+    supportBilling, supportSales
+  ]
 }
-
-// TODO: replace this with real data from your application
-const EXAMPLE_DATA: GroupsItem[] = [
-  {id: 1, name: 'Hydrogen'},
-  {id: 2, name: 'Helium'},
-  {id: 3, name: 'Lithium'},
-  {id: 4, name: 'Beryllium'},
-  {id: 5, name: 'Boron'},
-  {id: 6, name: 'Carbon'},
-  {id: 7, name: 'Nitrogen'},
-  {id: 8, name: 'Oxygen'},
-  {id: 9, name: 'Fluorine'},
-  {id: 10, name: 'Neon'},
-  {id: 11, name: 'Sodium'},
-  {id: 12, name: 'Magnesium'},
-  {id: 13, name: 'Aluminum'},
-  {id: 14, name: 'Silicon'},
-  {id: 15, name: 'Phosphorus'},
-  {id: 16, name: 'Sulfur'},
-  {id: 17, name: 'Chlorine'},
-  {id: 18, name: 'Argon'},
-  {id: 19, name: 'Potassium'},
-  {id: 20, name: 'Calcium'},
-];
 
 /**
  * Data source for the Groups view. This class should
  * encapsulate all logic for fetching and manipulating the displayed data
  * (including sorting, pagination, and filtering).
  */
-export class GroupsDataSource extends DataSource<GroupsItem> {
-  data: GroupsItem[] = EXAMPLE_DATA;
+export class GroupsDataSource extends DataSource<Group> {
+  data: Group[] = EXAMPLE_DATA;
   paginator: MatPaginator | undefined;
   sort: MatSort | undefined;
 
@@ -53,7 +63,7 @@ export class GroupsDataSource extends DataSource<GroupsItem> {
    * the returned stream emits new items.
    * @returns A stream of the items to be rendered.
    */
-  connect(): Observable<GroupsItem[]> {
+  connect(): Observable<Group[]> {
     if (this.paginator && this.sort) {
       // Combine everything that affects the rendered data into one update
       // stream for the data-table to consume.
@@ -76,7 +86,7 @@ export class GroupsDataSource extends DataSource<GroupsItem> {
    * Paginate the data (client-side). If you're using server-side pagination,
    * this would be replaced by requesting the appropriate data from the server.
    */
-  private getPagedData(data: GroupsItem[]): GroupsItem[] {
+  private getPagedData(data: Group[]): Group[] {
     if (this.paginator) {
       const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
       return data.splice(startIndex, this.paginator.pageSize);
@@ -89,7 +99,7 @@ export class GroupsDataSource extends DataSource<GroupsItem> {
    * Sort the data (client-side). If you're using server-side sorting,
    * this would be replaced by requesting the appropriate data from the server.
    */
-  private getSortedData(data: GroupsItem[]): GroupsItem[] {
+  private getSortedData(data: Group[]): Group[] {
     if (!this.sort || !this.sort.active || this.sort.direction === '') {
       return data;
     }

@@ -3,12 +3,10 @@ import { CommonModule } from '@angular/common';
 import { HomePageComponent } from './pages/home-page/home-page.component';
 import { RootRoutingModule } from './root-routing.module';
 import { Error404PageComponent } from './pages/error404-page/error404-page.component';
-import { MatTabsModule } from '@angular/material/tabs';
 import { RolesComponent } from './components/roles/roles.component';
-import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSortModule } from '@angular/material/sort';
 import { GroupsComponent } from './components/groups/groups.component'
+import { SharedModule } from 'src/app/shared/shared.module';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -20,10 +18,8 @@ import { GroupsComponent } from './components/groups/groups.component'
   imports: [
     CommonModule,
     RootRoutingModule,
-    MatTabsModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule
+    MatButtonModule,
+    SharedModule
   ],
   exports: [
     HomePageComponent

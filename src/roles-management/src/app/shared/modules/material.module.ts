@@ -12,6 +12,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 
 import { NgModule } from '@angular/core';
 
@@ -31,6 +36,11 @@ import { NgModule } from '@angular/core';
     MatTooltipModule,
     MatListModule,
     MatDialogModule,
+    MatSidenavModule,
+    MatTabsModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule
   ],
   exports: [
     MatButtonModule,
@@ -47,6 +57,11 @@ import { NgModule } from '@angular/core';
     MatTooltipModule,
     MatListModule,
     MatDialogModule,
+    MatSidenavModule,
+    MatTabsModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule
   ],
 })
 export class MaterialModule {}

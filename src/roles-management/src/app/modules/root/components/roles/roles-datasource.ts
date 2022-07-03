@@ -6,6 +6,7 @@ import { Observable, of as observableOf, merge } from 'rxjs';
 import { Role } from '../../models/role.model';
 import { SAMPLE_ROLES } from '../../repository/sampleData';
 import { StorageService } from 'src/app/shared/services/storage.service';
+import { Group } from '../../models/group.model';
 
 /**
  * Data source for the Roles view. This class should
@@ -57,11 +58,27 @@ export class RolesDataSource extends DataSource<Role> {
   addRole(role: Role) {
     this.data.push(role);
     StorageService.set<Role[]>("Roles", this.data);
+    this.paginator?.firstPage();
+  }
+
+  deleteRole(roleId: string) {
+    const roleIndex = this.data.findIndex(i => i.id === roleId)
+    this.data.splice(roleIndex, 1);
+    StorageService.set<Role[]>("Roles", this.data);
+    // const groups = StorageService.get<Group[]>("Groups");
+
+    // groups?.forEach(group => {
+    //   const idx = group.roles.findIndex(i => i.role.id === role.id);
+    //   group.roles.splice(idx, 1);
+    // });
+
+    // if (groups !== null)
+    //   StorageService.set<Group[]>("Groups", groups);
   }
 
   updateRoleName(id: string, name: string) {
     const role = this.data.find(i => i.id === id);
-
+    
     if (role) {
       role.name = name;
       StorageService.set<Role[]>("Roles", this.data);

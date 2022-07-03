@@ -1,8 +1,10 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
 import { Role } from '../../models/role.model';
+import { DialogBoxComponent } from '../dialog-box/dialog-box.component';
 import { RolesDataSource } from './roles-datasource';
 
 @Component({
@@ -17,9 +19,9 @@ export class RolesComponent implements AfterViewInit {
   dataSource: RolesDataSource;
 
   selectedRole: Role | undefined;
-  displayedColumns = ['id', 'name'];
+  displayedColumns = ['id', 'name', 'action'];
 
-  constructor() {
+  constructor(private dialog: MatDialog) {
     this.dataSource = new RolesDataSource();
   }
 
@@ -31,10 +33,31 @@ export class RolesComponent implements AfterViewInit {
 
   addRole() {
     this.dataSource.addRole(new Role("new role"));
-    this.table.renderRows();
   }
 
   updateRoleName(role: Role) {
     this.dataSource.updateRoleName(role.id, role.name);
+  }
+
+  deleteRole(role: Role) {
+    this.dataSource.deleteRole(role.id);
+  }
+
+  openDialog(action: string, obj: any) {
+    obj.action = action;
+    const dialogRef = this.dialog.open(DialogBoxComponent, {
+      width: '350px',
+      data: obj
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result.event == 'Add') {
+        this.addRole();
+      } else if (result.event == 'Update') {
+        this.updateRoleName(result.data);
+      } else if (result.event == 'Delete') {
+        this.deleteRole(result.data);
+      }
+    });
   }
 }

@@ -7,19 +7,23 @@ import { RolesComponent } from './components/roles/roles.component';
 import { GroupsComponent } from './components/groups/groups.component'
 import { SharedModule } from 'src/app/shared/shared.module';
 import { MatButtonModule } from '@angular/material/button';
+import { DialogBoxComponent } from './components/dialog-box/dialog-box.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     HomePageComponent,
     Error404PageComponent,
     RolesComponent,
-    GroupsComponent
+    GroupsComponent,
+    DialogBoxComponent
   ],
   imports: [
     CommonModule,
     RootRoutingModule,
     MatButtonModule,
-    SharedModule
+    SharedModule,
+    FormsModule
   ],
   exports: [
     HomePageComponent

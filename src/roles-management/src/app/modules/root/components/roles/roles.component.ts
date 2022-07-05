@@ -39,8 +39,8 @@ export class RolesComponent implements AfterViewInit {
     this.dataSource.updateRoleName(role.id, role.name);
   }
 
-  deleteRole(role: Role) {
-    this.dataSource.deleteRole(role.id);
+  removeRole(role: Role) {
+    this.dataSource.removeRole(role.id);
   }
 
   openDialog(action: string, obj: any) {
@@ -51,12 +51,12 @@ export class RolesComponent implements AfterViewInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result.event == 'Add') {
+      if (result.event == 'Add New Role') {
         this.addRole();
-      } else if (result.event == 'Update') {
+      } else if (result.event == 'Update Role') {
         this.updateRoleName(result.data);
       } else if (result.event == 'Delete') {
-        this.deleteRole(result.data);
+        this.removeRole(result.data);
       }
     });
   }

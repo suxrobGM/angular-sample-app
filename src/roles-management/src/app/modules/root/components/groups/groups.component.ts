@@ -17,18 +17,22 @@ import { GroupsDataSource } from './groups-datasource';
 export class GroupsComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  @ViewChild(MatTable) table!: MatTable<GroupItem>;
+  @ViewChild(MatTable) table!: MatTable<Role>;
   dataSource: GroupsDataSource;
 
   displayedColumns = ['required', 'name'];
   groups: GroupItem[];
   roles: Role[];
   selectedGroup: Group;
+  searchQuery: string;
+  filterRoles: string;
 
   constructor(private dialog: MatDialog) {
     this.dataSource = new GroupsDataSource();
     this.groups = [];
-    this.roles = this.dataSource.roles;
+    this.roles = [];
+    this.searchQuery = '';
+    this.filterRoles = 'show_all';
 
     this.dataSource.groups.forEach((item, i) => {
       this.groups.push({active: i === 0, group: item});
@@ -40,6 +44,13 @@ export class GroupsComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
+    this.table.dataSource = this.dataSource;
+  }
+
+  applyFilter() {
+    const search = this.searchQuery !== '' ? this.searchQuery.trim().toLocaleLowerCase() : '';
+    this.dataSource.currentGroup = this.selectedGroup;
+    this.dataSource.filter = `${this.filterRoles},${search}`;
   }
 
   selectGroup(groupItem: GroupItem) {
@@ -49,8 +60,8 @@ export class GroupsComponent implements AfterViewInit {
   }
 
   addGroup(group: Group) {
-    this.groups.push({active: false, group: group});
-    this.dataSource.addGroup(group.name);
+    const newGroup = this.dataSource.addGroup(group.name);
+    this.groups.push({active: false, group: newGroup});
   }
 
   updateGroupName(group: Group) {
@@ -59,6 +70,8 @@ export class GroupsComponent implements AfterViewInit {
 
   removeGroup(group: Group) {
     this.dataSource.removeGroup(group.id);
+    const groupItemIndex = this.groups.findIndex(i => i.group.id === group.id);
+    this.groups.splice(groupItemIndex, 1);
     this.selectedGroup = this.groups[0]?.group;
   }
 
@@ -68,18 +81,14 @@ export class GroupsComponent implements AfterViewInit {
 
   checkRole(event: MatCheckboxChange, role: Role) {
     if (event.checked) {
-      this.dataSource.addRoleToGroup(role, this.selectedGroup);
+      this.dataSource.addRoleToGroup(role, this.selectedGroup.id);
     } else {
-      this.dataSource.removeRoleFromGroup(role, this.selectedGroup);
+      this.dataSource.removeRoleFromGroup(role, this.selectedGroup.id);
     }
   }
 
   trackGroups(index: number, groupItem: GroupItem): string {
     return groupItem.group.id;
-  }
-
-  showActionButtons(event: Event) {
-    
   }
 
   openDialog(action: string, obj: any) {

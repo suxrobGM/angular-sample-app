@@ -3,7 +3,7 @@
     <h2>Roles</h2>
     <span class="empty-space"></span>
     <mat-form-field>
-      <input matInput placeholder="Search" />
+      <input matInput placeholder="Search role name" (keyup)="applyFilter()" [(ngModel)]="searchQuery" />
     </mat-form-field>
   </div>
   <table mat-table class="full-width-table" matSort aria-label="Elements">
@@ -31,7 +31,7 @@
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
 
   <mat-paginator #paginator

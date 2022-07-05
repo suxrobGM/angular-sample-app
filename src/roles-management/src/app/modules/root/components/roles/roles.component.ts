@@ -18,11 +18,12 @@ export class RolesComponent implements AfterViewInit {
   @ViewChild(MatTable) table!: MatTable<Role>;
   dataSource: RolesDataSource;
 
-  selectedRole: Role | undefined;
+  searchQuery: string;
   displayedColumns = ['id', 'name', 'action'];
 
   constructor(private dialog: MatDialog) {
     this.dataSource = new RolesDataSource();
+    this.searchQuery = '';
   }
 
   ngAfterViewInit(): void {
@@ -31,8 +32,8 @@ export class RolesComponent implements AfterViewInit {
     this.table.dataSource = this.dataSource;
   }
 
-  addRole() {
-    this.dataSource.addRole(new Role("new role"));
+  addRole(role: Role) {
+    this.dataSource.addRole(role);
   }
 
   updateRoleName(role: Role) {
@@ -41,6 +42,10 @@ export class RolesComponent implements AfterViewInit {
 
   removeRole(role: Role) {
     this.dataSource.removeRole(role.id);
+  }
+
+  applyFilter() {
+    this.dataSource.filter = this.searchQuery !== '' ? this.searchQuery.trim().toLocaleLowerCase() : '';
   }
 
   openDialog(action: string, obj: any) {
@@ -52,7 +57,7 @@ export class RolesComponent implements AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result.event == 'Add New Role') {
-        this.addRole();
+        this.addRole(result.data);
       } else if (result.event == 'Update Role') {
         this.updateRoleName(result.data);
       } else if (result.event == 'Delete') {

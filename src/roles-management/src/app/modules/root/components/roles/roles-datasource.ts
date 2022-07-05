@@ -15,13 +15,14 @@ export class RolesDataSource extends MatTableDataSource<Role> {
     super(data);
 
     this.filterPredicate = (data: Role, filter: string) => {
-      return filter !== '' ? data.name.trim().toLowerCase().includes(filter.trim().toLocaleLowerCase()) : true;
+      return data.name.trim().toLowerCase().includes(filter.trim().toLocaleLowerCase());
     }
   }
 
   addRole(role: Role) {
     this.data.push(new Role(role.name));
     StorageService.set<Role[]>('Roles', this.data);
+    this.data = this.data; // raise changed event
   }
 
   updateRoleName(id: string, name: string) {
@@ -37,5 +38,6 @@ export class RolesDataSource extends MatTableDataSource<Role> {
     const roleIndex = this.data.findIndex(i => i.id === roleId)
     this.data.splice(roleIndex, 1);
     StorageService.set<Role[]>('Roles', this.data);
+    this.data = this.data;
   }
 }

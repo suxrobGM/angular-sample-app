@@ -72,7 +72,10 @@ export class GroupsComponent implements AfterViewInit {
     this.dataSource.removeGroup(group.id);
     const groupItemIndex = this.groups.findIndex(i => i.group.id === group.id);
     this.groups.splice(groupItemIndex, 1);
-    this.selectedGroup = this.groups[0]?.group;
+
+    if (this.selectedGroup.id === group.id) {
+      this.selectGroup(this.groups[0]);
+    }
   }
 
   roleIsInGroup(role: Role): boolean {

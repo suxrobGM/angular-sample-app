@@ -61,3 +61,13 @@ button.content-sidebar__item button.mat-icon-button {
 button.content-sidebar__item:hover button.mat-icon-button {
   visibility: visible;
 }
+
+@media (min-width: 1200px) { 
+  .content-sidebar {
+    width: 400px;
+  }
+  
+  .content-main {
+    width: 100%;
+  }
+}

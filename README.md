@@ -18,7 +18,7 @@ Open http://localhsot:4200 url.
 ![screenshot](./docs/screenshot_1.jpg?raw=true)
 
 ## Task 2 (SQL script)
-Execute the [tickets.sql](./src/tickets-database/tickets.sql?raw=true) into MS SQL Server database.
+Execute the [tickets.sql](./src/tickets-database/tickets.sql) into MS SQL Server database.
 
 ## Task 3 (Proxy app)
 Run the Asp.Net Core app (.NET 6)

@@ -13,11 +13,6 @@ public class ProxyController : ControllerBase
     private readonly HttpProxyOptions _httpOptions = HttpProxyOptionsBuilder.Instance
         .WithHttpClientName("ProxyHttpClient")
         .WithAfterReceive(HandleResponseContent)
-        .WithHandleFailure((ctx, ex) =>
-        {
-            Console.WriteLine($"ERROR: {ex}");
-            return Task.CompletedTask;
-        })
         .Build();
 
     [HttpGet("{**query}")]

@@ -1,7 +1,4 @@
-﻿using AspNetCore.Proxy;
-using Microsoft.AspNetCore.Mvc.Authorization;
-
-namespace HabrProxy;
+﻿namespace HabrProxy;
 
 internal static class HostingExtensions
 {
@@ -10,7 +7,6 @@ internal static class HostingExtensions
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-        builder.Services.AddProxies();
         builder.Services.AddHttpClient("ProxyHttpClient")
             .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler()
             {
@@ -40,11 +36,5 @@ internal static class HostingExtensions
 
         app.MapControllers();
         return app;
-    }
-
-    private static void AddSecretsJson(IConfigurationBuilder configuration)
-    {
-        var path = Path.Combine(AppContext.BaseDirectory, "secrets.json");
-        configuration.AddJsonFile(path, true);
     }
 }

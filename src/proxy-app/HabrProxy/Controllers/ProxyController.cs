@@ -8,10 +8,15 @@ namespace HabrProxy.Controllers;
 [ApiController]
 public class ProxyController : ControllerBase
 {
-    private readonly HttpProxyOptions _httpOptions = HttpProxyOptionsBuilder.Instance
-        .WithHttpClientName("ProxyHttpClient")
-        .WithAfterReceive((ctx, rm) => new HabrResponseHandler().HandleAsync(ctx, rm))
-        .Build();
+    private readonly HttpProxyOptions _httpOptions;
+
+    public ProxyController(IResponseHandler responseHandler)
+    {
+        _httpOptions = HttpProxyOptionsBuilder.Instance
+            .WithHttpClientName("ProxyHttpClient")
+            .WithAfterReceive((ctx, rm) => responseHandler.HandleAsync(ctx, rm))
+            .Build();
+    }
 
     [HttpGet("assets-habr/{**query}", Order = 1)]
     public Task GetAssets(string? query)

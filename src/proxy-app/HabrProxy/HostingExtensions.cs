@@ -1,4 +1,5 @@
 ﻿using AspNetCore.Proxy;
+using HabrProxy.Services;
 
 namespace HabrProxy;
 
@@ -15,6 +16,8 @@ internal static class HostingExtensions
             {
                 AutomaticDecompression = System.Net.DecompressionMethods.GZip | System.Net.DecompressionMethods.Deflate
             });
+
+        builder.Services.AddScoped<IResponseHandler, HabrResponseHandler>();
         return builder.Build();
     }
 

@@ -1,4 +1,3 @@
-using System.Net.Http.Headers;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using AspNetCore.Proxy;
@@ -15,26 +14,44 @@ public class ProxyController : ControllerBase
         .WithAfterReceive(HandleResponseContent)
         .Build();
 
-    [HttpGet("{**query}")]
+    [HttpGet("/assets-habr/{**query}", Order = 1)]
+    public Task GetAssets(string? query)
+    {
+        return this.HttpProxyAsync($"https://assets.habr.com/{query}");
+    }
+
+    [HttpGet("/js/{**path}", Order = 2)]
+    public IActionResult GetJsFile(string? path)
+    {
+        return File($"/js/{path}", "application/javascript");
+    }
+
+    [HttpGet("/{**query}", Order = 3)]
     public Task Get(string? query)
     {
-        return this.HttpProxyAsync($"https://habr.com/{query}", _httpOptions);
+        return this.ProxyAsync($"https://habr.com/{query}", $"ws://habr.com/{query}", _httpOptions);
     }
 
     private static async Task HandleResponseContent(HttpContext ctx, HttpResponseMessage rm)
     {
-        var htmlContentType = MediaTypeHeaderValue.Parse("text/html; charset=utf-8");
-
-        if (!Equals(rm.Content.Headers.ContentType, htmlContentType))
+        if (!IsContentOfType(rm, "text/html"))
         {
             return;
         }
 
         var content = await rm.Content.ReadAsStringAsync();
 
+        content = content.Replace("https://habr.com", "/")
+                        .Replace("https://assets.habr.com", "/assets-habr")
+                        .Replace("src=\"/assets-habr/habr-web/js/chunk-vendors.9df20697.js\"", "src=\"/js/chunk-vendors.9df20697.js\"");
+
         var doc = new HtmlDocument();
         doc.LoadHtml(content);
         var body = doc.DocumentNode.SelectSingleNode("//div[@id='app']");
+
+        if (body == null)
+            return;
+
         var nodes = body.Descendants();
 
         foreach (var node in nodes)
@@ -70,5 +87,10 @@ public class ProxyController : ControllerBase
         }
 
         return sb.ToString();
+    }
+
+    private static bool IsContentOfType(HttpResponseMessage rm, string type)
+    {
+        return Equals(rm.Content.Headers.ContentType?.MediaType, type);
     }
 }

@@ -1,6 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HabrProxy", "HabrProxy\HabrProxy.csproj", "{C914E90B-9770-4A2A-B51D-FA0527E4BF49}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32611.2
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HabrProxy", "HabrProxy\HabrProxy.csproj", "{C914E90B-9770-4A2A-B51D-FA0527E4BF49}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +15,11 @@ Global
 		{C914E90B-9770-4A2A-B51D-FA0527E4BF49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C914E90B-9770-4A2A-B51D-FA0527E4BF49}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C914E90B-9770-4A2A-B51D-FA0527E4BF49}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DCBFAF4E-BAB5-4691-8105-29BE3F31FF79}
 	EndGlobalSection
 EndGlobal

@@ -1,4 +1,6 @@
-﻿namespace HabrProxy;
+﻿using AspNetCore.Proxy;
+
+namespace HabrProxy;
 
 internal static class HostingExtensions
 {
@@ -7,6 +9,7 @@ internal static class HostingExtensions
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        builder.Services.AddProxies();
         builder.Services.AddHttpClient("ProxyHttpClient")
             .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler()
             {
@@ -23,16 +26,8 @@ internal static class HostingExtensions
             app.UseSwaggerUI();
         }
 
-        app.UseCors(builder =>
-        {
-            builder
-            .AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader();
-        });
-
         app.UseHttpsRedirection();
-        app.UseAuthorization();
+        app.UseStaticFiles();
 
         app.MapControllers();
         return app;

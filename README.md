@@ -13,7 +13,7 @@ Run the Angular app:
 $ cd angular-sample-app/src/roles-management
 $ ng serve
 ```
-Open http://localhsot:4200 url.
+Open http://localhost:4200 url.
 
 ![screenshot](./docs/screenshot_1.jpg?raw=true)
 
@@ -27,4 +27,4 @@ $ cd angular-sample-app/src/proxy-app/HabrProxy
 $ dotnet run
 ```
 
-Open the https://localhsot:7103 url to see proxied https://habr.com
+Open the https://localhost:7103 url to see proxied https://habr.com

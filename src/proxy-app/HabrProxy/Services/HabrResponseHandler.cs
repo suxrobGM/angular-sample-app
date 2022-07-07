@@ -7,19 +7,28 @@ public class HabrResponseHandler : IResponseHandler
 {
     public async Task HandleAsync(HttpContext ctx, HttpResponseMessage response)
     {
-        if (!IsContentOfType(response, "text/html"))
+        if (ctx.Request.Path == "/auth/checklogin/")
         {
+            response.Content.Headers.ContentType!.MediaType = "application/x-javascript";
             return;
         }
 
         var content = await response.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode || !IsContentOfType(response, "text/html"))
+        {
+            return;
+        }
 
         content = content.Replace("https://habr.com", "/")
                         .Replace("https://assets.habr.com", "/assets-habr")
                         .Replace("https://www.googletagmanager.com", "/googletagmanager")
                         .Replace("https://mc.yandex.ru", "/mc-yandex")
                         .Replace("https://yandex.ru", "/yandex")
-                        .Replace("src=\"/assets-habr/habr-web/js/chunk-vendors.9df20697.js\"", "src=\"/js/chunk-vendors.9df20697.js\"");
+                        .Replace("src=\"/assets-habr/habr-web/js/chunk-vendors.9df20697.js\"", "src=\"/js/chunk-vendors.9df20697.js\"")
+                        .Replace("href=\"/assets-habr/habr-web/js/chunk-vendors.9df20697.js\"", "src=\"/js/chunk-vendors.9df20697.js\"")
+                        .Replace("src=\"/assets-habr/habr-web/js/app.f7fdce84.js\"", "src=\"/js/app.f7fdce84.js\"")
+                        .Replace("href=\"/assets-habr/habr-web/js/app.f7fdce84.js\"", "src=\"/js/app.f7fdce84.js\"");
 
         var doc = new HtmlDocument();
         doc.LoadHtml(content);

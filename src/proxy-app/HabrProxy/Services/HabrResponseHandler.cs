@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using HabrProxy.Models;
 using HtmlAgilityPack;
 
@@ -41,22 +42,24 @@ public class HabrResponseHandler : IResponseHandler
 
     private static StringContent ModifyHtmlContent(string htmlContent)
     {
+        const string appJsPattern = @"/assets-habr/habr-web/js/app.\w+.js";
+        const string chunkVendorsJsPattern = @"/assets-habr/habr-web/js/chunk-vendors.\w+.js";
+
         htmlContent = htmlContent.Replace("https://habr.com", "/")
                         .Replace("https://assets.habr.com", "/assets-habr")
                         .Replace("https://www.googletagmanager.com", "/googletagmanager")
                         .Replace("https://mc.yandex.ru", "/mc-yandex")
-                        .Replace("https://yandex.ru", "/yandex")
-                        .Replace("src=\"/assets-habr/habr-web/js/chunk-vendors.9df20697.js\"", "src=\"/js/chunk-vendors.9df20697.js\"")
-                        .Replace("href=\"/assets-habr/habr-web/js/chunk-vendors.9df20697.js\"", "src=\"/js/chunk-vendors.9df20697.js\"")
-                        .Replace("src=\"/assets-habr/habr-web/js/app.f7fdce84.js\"", "src=\"/js/app.f7fdce84.js\"")
-                        .Replace("href=\"/assets-habr/habr-web/js/app.f7fdce84.js\"", "src=\"/js/app.f7fdce84.js\"");
+                        .Replace("https://yandex.ru", "/yandex");
+
+        htmlContent = Regex.Replace(htmlContent, appJsPattern, "/js/app.js");
+        htmlContent = Regex.Replace(htmlContent, chunkVendorsJsPattern, "/js/chunk-vendors.js");
 
         var doc = new HtmlDocument();
         doc.LoadHtml(htmlContent);
         var body = doc.DocumentNode.SelectSingleNode("//div[@id='app']");
 
         if (body == null)
-            throw new InvalidOperationException("Body element is null");
+            return new StringContent(htmlContent, Encoding.UTF8, "text/html");
 
         var nodes = body.Descendants();
 

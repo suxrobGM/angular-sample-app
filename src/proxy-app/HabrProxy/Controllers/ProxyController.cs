@@ -118,16 +118,16 @@ public class ProxyController : ControllerBase
         return this.HttpProxyAsync($"https://mc.yandex.ru/{path}{query}");
     }
 
-    [HttpGet("js/chunk-vendors.9df20697.js", Order = 2)]
+    [HttpGet("js/chunk-vendors.js", Order = 2)]
     public IActionResult GetChunksJsFile()
     {
-        return File($"/js/chunk-vendors.9df20697.js", "application/javascript");
+        return File($"/js/chunk-vendors.js", "application/javascript");
     }
 
-    [HttpGet("js/app.f7fdce84.js", Order = 2)]
+    [HttpGet("js/app.js", Order = 2)]
     public IActionResult GetAppJsFile()
     {
-        return File($"/js/app.f7fdce84.js", "application/javascript");
+        return File($"/js/app.js", "application/javascript");
     }
 
     [HttpGet("m-habr/{**path}", Order = 2)]

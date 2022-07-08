@@ -94,10 +94,6 @@ export class GroupsComponent implements AfterViewInit {
     return groupItem.group.id;
   }
 
-  refreshRoles() {
-    this.dataSource.fetchRoles();
-  }
-
   openDialog(action: string, obj: any) {
     obj.action = action;
     const dialogRef = this.dialog.open(DialogBoxComponent, {

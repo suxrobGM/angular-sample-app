@@ -3,7 +3,7 @@ import { InjectionToken } from '@angular/core';
 export const ROUTES_CONFIG = new InjectionToken('routes.config');
 
 const routesNames = {
-  home: '',
+  home: 'home',
   error404: '404'
 };
 

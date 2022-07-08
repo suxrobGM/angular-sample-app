@@ -29,6 +29,10 @@
   margin-bottom: 5px;
 }
 
+.content-sidebar__item:first-child {
+  margin-top: 1rem;
+}
+
 .content-sidebar__item.active {
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;

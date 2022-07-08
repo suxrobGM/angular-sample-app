@@ -38,14 +38,6 @@ export class GroupsDataSource extends MatTableDataSource<Role> {
     }
   }
 
-  public fetchRoles() {
-    let localData = StorageService.get<Role[]>('Roles');
-
-    if (localData) {
-      this.data = localData;
-    }
-  }
-
   public addRoleToGroup(role: Role, groupId: string) {
     const group = this.groups.find(i => i.id === groupId);
 

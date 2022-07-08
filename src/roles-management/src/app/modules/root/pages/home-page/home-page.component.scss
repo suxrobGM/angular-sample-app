@@ -1,0 +1,27 @@
+.navbar {
+    display: flex;
+    flex-direction: row;
+    background-color: #212529 !important;
+}
+
+.navbar-brand h1 {
+    color: white;
+    font-size: 36px;
+    margin: 5px 0 5px 5px;
+}
+
+.navbar-item a {
+    font-size: 24px;
+}
+
+::ng-deep .mat-tab-nav-bar.mat-primary .mat-ink-bar {
+    background-color: #fff !important;
+}
+
+.mat-tab-link {
+    color: #fff;
+}
+
+::ng-deep .mat-tab-link-container {
+    padding: 0.75rem 0.75rem 0 0.75rem;
+}

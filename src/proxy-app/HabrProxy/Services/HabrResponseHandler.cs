@@ -1,4 +1,6 @@
 ﻿using System.Text;
+using System.Text.Json;
+using HabrProxy.Models;
 using HtmlAgilityPack;
 
 namespace HabrProxy.Services;
@@ -7,6 +9,11 @@ public class HabrResponseHandler : IResponseHandler
 {
     public async Task HandleAsync(HttpContext ctx, HttpResponseMessage response)
     {
+        if (!response.IsSuccessStatusCode)
+        {
+            return;
+        }
+
         if (ctx.Request.Path == "/auth/checklogin/")
         {
             response.Content.Headers.ContentType!.MediaType = "application/x-javascript";
@@ -15,12 +22,19 @@ public class HabrResponseHandler : IResponseHandler
 
         var content = await response.Content.ReadAsStringAsync();
 
-        if (!response.IsSuccessStatusCode || !IsContentOfType(response, "text/html"))
+        if (IsContentOfType(response, "application/json"))
         {
-            return;
+            response.Content = ModifyJsonData(content);
         }
+        else if (IsContentOfType(response, "text/html"))
+        {
+            response.Content = ModifyHtmlContent(content);
+        }
+    }
 
-        content = content.Replace("https://habr.com", "/")
+    private static StringContent ModifyHtmlContent(string htmlContent)
+    {
+        htmlContent = htmlContent.Replace("https://habr.com", "/")
                         .Replace("https://assets.habr.com", "/assets-habr")
                         .Replace("https://www.googletagmanager.com", "/googletagmanager")
                         .Replace("https://mc.yandex.ru", "/mc-yandex")
@@ -31,11 +45,11 @@ public class HabrResponseHandler : IResponseHandler
                         .Replace("href=\"/assets-habr/habr-web/js/app.f7fdce84.js\"", "src=\"/js/app.f7fdce84.js\"");
 
         var doc = new HtmlDocument();
-        doc.LoadHtml(content);
+        doc.LoadHtml(htmlContent);
         var body = doc.DocumentNode.SelectSingleNode("//div[@id='app']");
 
         if (body == null)
-            return;
+            throw new InvalidOperationException("Body element is null");
 
         var nodes = body.Descendants();
 
@@ -50,12 +64,65 @@ public class HabrResponseHandler : IResponseHandler
         using var writer = new StringWriter();
         doc.Save(writer);
 
-        // Sets modified html content
-        response.Content = new StringContent(writer.ToString(), Encoding.UTF8, "text/html");
+        return new StringContent(writer.ToString(), Encoding.UTF8, "text/html");
     }
 
-    private static string AppendText(string text, string textToAppend)
+    private static StringContent ModifyJsonData(string jsonContent)
     {
+        try
+        {
+            var pageData = JsonSerializer.Deserialize<PageData>(jsonContent);
+            var jsonDoc = JsonDocument.Parse(jsonContent);
+            jsonDoc.RootElement.TryGetProperty("articleRefs", out var articleRefs);
+
+            if (pageData?.ArticleIds != null)
+            {
+                foreach (var articleId in pageData.ArticleIds)
+                {
+                    if (!articleRefs.TryGetProperty(articleId, out var articleObj))
+                    {
+                        continue;
+                    }
+
+                    var article = articleObj.Deserialize<Article>();
+
+                    if (article == null)
+                    {
+                        continue;
+                    }
+
+                    article.TitleHtml = AppendText(article.TitleHtml, "aaaaaa™");
+
+                    if (article?.Author != null)
+                    {
+                        article.Author.FullName = AppendText(article.Author.FullName, "™");
+                        article.Author.Speciality = AppendText(article.Author.Speciality, "™");
+                    }
+
+                    if (article?.LeadData != null)
+                    {
+                        article.LeadData.TextHtml = AppendText(article.LeadData.TextHtml, "™");
+                    }
+                }
+            }
+
+            var serializedContent = JsonSerializer.Serialize(pageData);
+            return new StringContent(serializedContent, Encoding.UTF8, "application/json");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+            return new StringContent("{}", Encoding.UTF8, "application/json");
+        }
+    }
+
+    private static string AppendText(string? text, string textToAppend)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return string.Empty;
+        }
+
         var words = text.Trim().Split(" ");
         var sb = new StringBuilder();
 

@@ -15,7 +15,7 @@ $ ng serve
 ```
 Open http://localhost:4200 url.
 
-![screenshot](./docs/screenshot_1.jpg?raw=true)
+![screenshot](./docs/app-screenshot.gif)
 
 ## Task 2 (SQL script)
 Execute the [tickets.sql](./src/tickets-database/tickets.sql) into MS SQL Server database.

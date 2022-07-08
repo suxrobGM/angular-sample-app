@@ -7,6 +7,13 @@ namespace HabrProxy.Services;
 
 public class HabrResponseHandler : IResponseHandler
 {
+    private readonly ILogger<HabrResponseHandler> _logger;
+
+    public HabrResponseHandler(ILogger<HabrResponseHandler> logger)
+    {
+        _logger = logger;
+    }
+
     public async Task HandleAsync(HttpContext ctx, HttpResponseMessage response)
     {
         if (!response.IsSuccessStatusCode)
@@ -67,7 +74,7 @@ public class HabrResponseHandler : IResponseHandler
         return new StringContent(writer.ToString(), Encoding.UTF8, "text/html");
     }
 
-    private static StringContent ModifyJsonData(string jsonContent)
+    private StringContent ModifyJsonData(string jsonContent)
     {
         try
         {
@@ -111,8 +118,8 @@ public class HabrResponseHandler : IResponseHandler
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.ToString());
-            return new StringContent("{}", Encoding.UTF8, "application/json");
+            _logger.LogWarning("Could not deserialize response content: {Content}, Exception message: {Exception}", jsonContent, ex.Message);
+            return new StringContent(jsonContent, Encoding.UTF8, "application/json");
         }
     }
 

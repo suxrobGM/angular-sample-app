@@ -1,7 +1,7 @@
 <!-- <h1>Permissions</h1> -->
-<mat-tab-group mat-align-tabs="end">
+<mat-tab-group mat-align-tabs="end" (selectedTabChange)="tabChanged($event)">
   <mat-tab label="Groups">
-    <app-groups></app-groups>
+    <app-groups #groupsTab></app-groups>
   </mat-tab>
   <mat-tab label="Roles">
     <app-roles></app-roles>

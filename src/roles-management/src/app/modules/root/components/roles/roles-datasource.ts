@@ -19,13 +19,13 @@ export class RolesDataSource extends MatTableDataSource<Role> {
     }
   }
 
-  addRole(role: Role) {
+  public addRole(role: Role) {
     this.data.push(new Role(role.name));
     StorageService.set<Role[]>('Roles', this.data);
     this.data = this.data; // raise changed event
   }
 
-  updateRoleName(id: string, name: string) {
+  public updateRoleName(id: string, name: string) {
     const role = this.data.find(i => i.id === id);
     
     if (role) {
@@ -34,7 +34,7 @@ export class RolesDataSource extends MatTableDataSource<Role> {
     }
   }
 
-  removeRole(roleId: string) {
+  public removeRole(roleId: string) {
     const roleIndex = this.data.findIndex(i => i.id === roleId)
     this.data.splice(roleIndex, 1);
     StorageService.set<Role[]>('Roles', this.data);
